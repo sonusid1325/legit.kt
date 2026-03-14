@@ -8,7 +8,7 @@ import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,10 +21,17 @@ import com.sonusid.legit.ui.theme.LegitTheme
 fun HomeScreen() {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     
+    // State to track which sheet to show
+    var activeSheet by remember { mutableStateOf<SheetType?>(null) }
+    
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            LegitTopBar(scrollBehavior = scrollBehavior)
+            LegitTopBar(
+                scrollBehavior = scrollBehavior,
+                onNotificationClick = { activeSheet = SheetType.NOTIFICATIONS },
+                onVerificationClick = { activeSheet = SheetType.VERIFICATIONS }
+            )
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
@@ -50,6 +57,10 @@ fun HomeScreen() {
 
             item {
                 PrivacyBanner()
+            }
+
+            item {
+                FeaturedDocsSection()
             }
             
             item {
@@ -79,7 +90,26 @@ fun HomeScreen() {
                 }
             }
         }
+
+        // Bottom Sheet Logic
+        activeSheet?.let { sheetType ->
+            ModalBottomSheet(
+                onDismissRequest = { activeSheet = null },
+                containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                dragHandle = { BottomSheetDefaults.DragHandle() }
+            ) {
+                when (sheetType) {
+                    SheetType.NOTIFICATIONS -> NotificationSheetContent()
+                    SheetType.VERIFICATIONS -> VerificationSheetContent()
+                }
+            }
+        }
     }
+}
+
+enum class SheetType {
+    NOTIFICATIONS,
+    VERIFICATIONS
 }
 
 @Preview(showBackground = true)
