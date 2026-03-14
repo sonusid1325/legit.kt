@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Rule
 import androidx.compose.material.icons.rounded.Notifications
+import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontWeight
@@ -13,7 +14,8 @@ import androidx.compose.ui.text.font.FontWeight
 fun LegitTopBar(
     scrollBehavior: TopAppBarScrollBehavior,
     onNotificationClick: () -> Unit,
-    onVerificationClick: () -> Unit
+    onVerificationClick: () -> Unit,
+    onProfileClick: () -> Unit
 ) {
     val collapsedFraction = scrollBehavior.state.collapsedFraction
     
@@ -47,6 +49,13 @@ fun LegitTopBar(
                 Icon(
                     imageVector = Icons.Rounded.Notifications,
                     contentDescription = "Notifications",
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            }
+            IconButton(onClick = onProfileClick) {
+                Icon(
+                    imageVector = Icons.Rounded.Person,
+                    contentDescription = "Profile",
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }

@@ -21,10 +21,12 @@ import com.sonusid.legit.ui.theme.LegitTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    onProfileClick: () -> Unit
+) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     
-    // State to track which sheet to show
+    // State to track which sheet to show for documents or other info
     var activeSheet by remember { mutableStateOf<SheetType?>(null) }
     
     // Entry animation state
@@ -32,14 +34,15 @@ fun HomeScreen() {
     LaunchedEffect(Unit) {
         visible = true
     }
-    
+
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LegitTopBar(
                 scrollBehavior = scrollBehavior,
                 onNotificationClick = { activeSheet = SheetType.NOTIFICATIONS },
-                onVerificationClick = { activeSheet = SheetType.VERIFICATIONS }
+                onVerificationClick = { activeSheet = SheetType.VERIFICATIONS },
+                onProfileClick = onProfileClick
             )
         },
         floatingActionButton = {
@@ -67,7 +70,7 @@ fun HomeScreen() {
         ) {
             item {
                 AnimatedEntryItem(visible = visible, index = 0) {
-                    WelcomeCard(name = "Firoj")
+                    WelcomeCard(name = "Firoj Siddiquie")
                 }
             }
 
@@ -79,7 +82,10 @@ fun HomeScreen() {
 
             item {
                 AnimatedEntryItem(visible = visible, index = 2) {
-                    FeaturedDocsSection()
+                    FeaturedDocsSection(onDocClick = { docName ->
+                        if (docName == "Aadhar") activeSheet = SheetType.DOC_AADHAR
+                        if (docName == "PAN") activeSheet = SheetType.DOC_PAN
+                    })
                 }
             }
             
@@ -123,6 +129,8 @@ fun HomeScreen() {
                 when (sheetType) {
                     SheetType.NOTIFICATIONS -> NotificationSheetContent()
                     SheetType.VERIFICATIONS -> VerificationSheetContent()
+                    SheetType.DOC_AADHAR -> DocumentViewSheet(docType = "Aadhar", onDismiss = { activeSheet = null })
+                    SheetType.DOC_PAN -> DocumentViewSheet(docType = "PAN", onDismiss = { activeSheet = null })
                 }
             }
         }
@@ -163,23 +171,15 @@ fun AnimatedEntryItem(
 
 enum class SheetType {
     NOTIFICATIONS,
-    VERIFICATIONS
+    VERIFICATIONS,
+    DOC_AADHAR,
+    DOC_PAN
 }
 
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
     LegitTheme {
-        HomeScreen()
-    }
-}
-
-@Preview(showBackground = true,
-    uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES or android.content.res.Configuration.UI_MODE_TYPE_NORMAL
-)
-@Composable
-fun HomeScreenPreviewDark() {
-    LegitTheme {
-        HomeScreen()
+        HomeScreen(onProfileClick = {})
     }
 }

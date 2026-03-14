@@ -24,7 +24,6 @@ fun WelcomeCard(name: String) {
         modifier = Modifier
             .fillMaxWidth()
             .height(210.dp),
-        // Restored the asymmetrical organic shape
         shape = RoundedCornerShape(topStart = 48.dp, topEnd = 16.dp, bottomStart = 16.dp, bottomEnd = 48.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         colors = CardDefaults.cardColors(
@@ -32,7 +31,6 @@ fun WelcomeCard(name: String) {
         )
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            // Subtle Pattern Background with bolder dots
             SubtlePattern(color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.1f))
 
             Column(
@@ -65,7 +63,6 @@ fun WelcomeCard(name: String) {
                         )
                     }
                     
-                    // Verified Badge - Circular style works better with asymmetrical card
                     Surface(
                         shape = CircleShape,
                         color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.15f),
@@ -82,7 +79,6 @@ fun WelcomeCard(name: String) {
                     }
                 }
 
-                // Security Pill
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth(),
@@ -114,7 +110,6 @@ fun WelcomeCard(name: String) {
                         }
                     }
                     
-                    // Active Status Indicator
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -122,7 +117,7 @@ fun WelcomeCard(name: String) {
                         Box(
                             modifier = Modifier
                                 .size(8.dp)
-                                .background(Color(0xFF81C784), CircleShape) 
+                                .background(Color(0xFF81C784), CircleShape)
                         )
                         Text(
                             text = "SECURE",

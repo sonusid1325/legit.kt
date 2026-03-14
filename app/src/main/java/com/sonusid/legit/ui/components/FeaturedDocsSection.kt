@@ -29,7 +29,7 @@ data class FeaturedDoc(
 )
 
 @Composable
-fun FeaturedDocsSection() {
+fun FeaturedDocsSection(onDocClick: (String) -> Unit) {
     val docs = listOf(
         FeaturedDoc(
             name = "Aadhar",
@@ -70,7 +70,7 @@ fun FeaturedDocsSection() {
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(docs) { doc ->
-                DocCard(doc)
+                DocCard(doc, onClick = { onDocClick(doc.name) })
             }
         }
     }
@@ -78,10 +78,9 @@ fun FeaturedDocsSection() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun DocCard(doc: FeaturedDoc) {
-    // "Rounded Square" style for better contrast and expressive look
+private fun DocCard(doc: FeaturedDoc, onClick: () -> Unit) {
     Surface(
-        onClick = { /* TODO */ },
+        onClick = onClick,
         modifier = Modifier.size(120.dp),
         shape = RoundedCornerShape(32.dp),
         color = doc.containerColor,
