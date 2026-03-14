@@ -1,5 +1,8 @@
 package com.sonusid.legit.ui.presentation
 
+import android.content.Context
+import android.content.ContextWrapper
+import android.widget.Toast
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.compose.foundation.background
@@ -31,11 +34,18 @@ fun DocumentViewSheet(
 ) {
     var isUnlocked by remember { mutableStateOf(false) }
     val context = LocalContext.current
-    val activity = context as? FragmentActivity
+    val activity = context.findActivity()
+    val executor = remember(context) { ContextCompat.getMainExecutor(context) }
 
-    val executor = remember { ContextCompat.getMainExecutor(context) }
-    
-    // Setup Biometric Prompt
+    val promptInfo = remember {
+        BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Legit Secure Vault")
+            .setSubtitle("Confirm your Screen Lock to view $docType")
+            .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL)
+            .setConfirmationRequired(false)
+            .build()
+    }
+
     val biometricPrompt = remember {
         activity?.let {
             BiometricPrompt(it, executor, object : BiometricPrompt.AuthenticationCallback() {
@@ -43,22 +53,19 @@ fun DocumentViewSheet(
                     super.onAuthenticationSucceeded(result)
                     isUnlocked = true
                 }
-                
+
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                     super.onAuthenticationError(errorCode, errString)
-                    // Optional: handle error
+                    if (errorCode != BiometricPrompt.ERROR_USER_CANCELED) {
+                        Toast.makeText(context, errString, Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
                 }
             })
         }
-    }
-
-    val promptInfo = remember {
-        BiometricPrompt.PromptInfo.Builder()
-            .setTitle("Legit Secure Vault")
-            .setSubtitle("Confirm your screen lock to view $docType")
-            // This allows Fingerprint, Face, PIN, Pattern, or Password
-            .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL)
-            .build()
     }
 
     Column(
@@ -79,7 +86,7 @@ fun DocumentViewSheet(
                 PanCardContent()
             }
             
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(24.dp))
             
             Button(
                 onClick = { /* TODO: Share Proof */ },
@@ -93,6 +100,15 @@ fun DocumentViewSheet(
             }
         }
     }
+}
+
+fun Context.findActivity(): FragmentActivity? {
+    var context = this
+    while (context is ContextWrapper) {
+        if (context is FragmentActivity) return context
+        context = context.baseContext
+    }
+    return null
 }
 
 @Composable
@@ -176,7 +192,6 @@ fun AadharCardContent() {
             
             Spacer(modifier = Modifier.height(32.dp))
             
-            // As requested: No name in Aadhar, updated DOB
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(
                     text = "DOB: 13/05/2005", 
@@ -218,7 +233,7 @@ fun PanCardContent() {
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Box(modifier = Modifier.fillMaxSize().background(
-            Brush.verticalGradient(listOf(Color(0xFF00796B).copy(alpha = 0.1f), Color.Transparent))
+            Brush.verticalGradient(listOf(Color(0xFF00796B).copy(alpha = 0.05f), Color.Transparent))
         )) {
             Column(modifier = Modifier.padding(24.dp)) {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
