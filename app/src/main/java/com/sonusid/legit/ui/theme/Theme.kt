@@ -12,32 +12,72 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    outline = Outline,
+    onPrimary = OnPrimary,
+    primary = Primary,
+    outlineVariant = OutlineVariant,
+    primaryContainer = PrimaryContainer,
+    onTertiaryContainer = OnTertiaryContainer,
+    tertiaryContainer = TertiaryContainer,
+    onTertiary = OnTertiary,
+    onSecondary = OnSecondary,
+    inverseOnSurface = InverseOnSurface,
+    onBackground = OnBackground,
+    secondary = Secondary,
+    inverseSurface = InverseSurface,
+    surface = Surface,
+    onSecondaryContainer = OnSecondaryContainer,
+    inversePrimary = InversePrimary,
+    onErrorContainer = OnErrorContainer,
+    error = Error,
+    background = Background,
+    onSurfaceVariant = OnSurfaceVariant,
+    onPrimaryContainer = OnPrimaryContainer,
+    secondaryContainer = SecondaryContainer,
+    tertiary = Tertiary,
+    surfaceVariant = SurfaceVariant,
+    onSurface = OnSurface,
+    surfaceTint = SurfaceTint,
+    onError = OnError,
+    errorContainer = ErrorContainer
 )
 
+// In this app we only use dark mode as per design, but keeping light colorscheme to compile
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    outline = Outline,
+    onPrimary = OnPrimary,
+    primary = Primary,
+    outlineVariant = OutlineVariant,
+    primaryContainer = PrimaryContainer,
+    onTertiaryContainer = OnTertiaryContainer,
+    tertiaryContainer = TertiaryContainer,
+    onTertiary = OnTertiary,
+    onSecondary = OnSecondary,
+    inverseOnSurface = InverseOnSurface,
+    onBackground = OnBackground,
+    secondary = Secondary,
+    inverseSurface = InverseSurface,
+    surface = Surface,
+    onSecondaryContainer = OnSecondaryContainer,
+    inversePrimary = InversePrimary,
+    onErrorContainer = OnErrorContainer,
+    error = Error,
+    background = Background,
+    onSurfaceVariant = OnSurfaceVariant,
+    onPrimaryContainer = OnPrimaryContainer,
+    secondaryContainer = SecondaryContainer,
+    tertiary = Tertiary,
+    surfaceVariant = SurfaceVariant,
+    onSurface = OnSurface,
+    surfaceTint = SurfaceTint,
+    onError = OnError,
+    errorContainer = ErrorContainer
 )
 
 @Composable
 fun LegitTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    darkTheme: Boolean = true, // Force Dark mode as per design
+    dynamicColor: Boolean = false, // Disable dynamic colors to stick with our branding
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -45,7 +85,6 @@ fun LegitTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }

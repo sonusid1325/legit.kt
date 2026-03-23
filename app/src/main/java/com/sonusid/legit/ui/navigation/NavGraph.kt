@@ -4,24 +4,22 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.sonusid.legit.ui.presentation.HomeScreen
-import com.sonusid.legit.ui.presentation.ProfileScreen
+import com.sonusid.legit.ui.presentation.MainScreen
+import com.sonusid.legit.ui.presentation.VerificationRequestScreen
 
 @Composable
 fun SetupNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = "home"
+        startDestination = "main"
     ) {
-        composable("home") {
-            HomeScreen(
-                onProfileClick = { navController.navigate("profile") }
-            )
+        composable("main") {
+            MainScreen()
         }
-        composable("profile") {
-            ProfileScreen(
-                onBack = { navController.popBackStack() }
-            )
+        composable("verification") {
+            VerificationRequestScreen()
         }
     }
 }
+
+// Added to end, but let's properly edit NavGraph.kt
